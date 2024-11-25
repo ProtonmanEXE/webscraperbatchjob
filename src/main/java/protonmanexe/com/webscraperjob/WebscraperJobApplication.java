@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebscraperJobApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WebscraperJobApplication.class, args);
+		System.exit(SpringApplication.exit(SpringApplication.run(WebscraperJobApplication.class, args)));
 	}
-
 }
