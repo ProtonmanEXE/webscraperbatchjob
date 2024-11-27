@@ -8,9 +8,11 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import protonmanexe.com.webscraperjob.models.GreenwoodNewsArticle;
+import protonmanexe.com.webscraperjob.service.GreenwoodNewsService;
 
 @Component
 public class GreenwoodNewsItemReader implements ItemReader<GreenwoodNewsArticle> {
@@ -19,6 +21,9 @@ public class GreenwoodNewsItemReader implements ItemReader<GreenwoodNewsArticle>
 
     int i = 0;
 
+    @Autowired
+    private GreenwoodNewsService greenwoodNewsSvc;
+
     @Override
     public GreenwoodNewsArticle read() throws Exception, UnexpectedInputException, 
     ParseException, NonTransientResourceException {
@@ -26,6 +31,8 @@ public class GreenwoodNewsItemReader implements ItemReader<GreenwoodNewsArticle>
         log.info("Starting itemreader...");
 
         // 1) Insert webscraper to extract news
+        greenwoodNewsSvc.scrapeGreenwoodNewsWebsite();
+
         GreenwoodNewsArticle article = new GreenwoodNewsArticle(i);
         article.setHeadlines("Test only");
         ArrayList<GreenwoodNewsArticle> listOfNews = new ArrayList<GreenwoodNewsArticle>();
