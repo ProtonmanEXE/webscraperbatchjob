@@ -49,6 +49,7 @@ public class JobConfig {
             .reader(gNItemReader)
             .processor(gNItemProcessor)
             .writer(gNItemWriter)
+            .allowStartIfComplete(true)
             .build();
     }
    
