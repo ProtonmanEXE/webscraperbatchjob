@@ -10,6 +10,7 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static protonmanexe.com.webscraperjob.constants.Constants.GREENWOOD_NEWS_ARTICLE_LIST;
@@ -21,6 +22,9 @@ import protonmanexe.com.webscraperjob.utils.GeneralUtils;
 public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
 
     private final static Logger log = LoggerFactory.getLogger(GreenwoodNewJobExecutionListener.class);
+
+    @Value("#{${greenwood.news.filter.keywords}}")
+    private List<String> filterKeywords;
 
     @Autowired
     private GreenwoodNewsService greenwoodNewsSvc;
@@ -44,11 +48,10 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
         }
 
         // 2) Filter article base on keywords
-        List<String> keywords = List.of("job", "kill", "dies", "dead", "shooting");
-
+        filterKeywords.forEach(word -> log.info(word));
         List<GreenwoodNewsArticle> filteredArticleList = 
             listOfNews.stream().filter(greenwoodNewsArticle -> {
-                boolean filterFlag = keywords.stream().anyMatch(
+                boolean filterFlag = filterKeywords.stream().anyMatch(
                     greenwoodNewsArticle.getHeadlines().toLowerCase()::contains);
                 log.info("{}: {}", greenwoodNewsArticle.getHeadlines(), filterFlag);
                 return filterFlag;
