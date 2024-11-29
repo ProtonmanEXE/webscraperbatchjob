@@ -5,14 +5,15 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import protonmanexe.com.webscraperjob.job.greenwoodnewsjob.GreenwoodNewJobExecutionListener;
+import protonmanexe.com.webscraperjob.job.greenwoodnewsjob.GreenwoodNewsItemProcessor;
+import protonmanexe.com.webscraperjob.job.greenwoodnewsjob.GreenwoodNewsItemReader;
+import protonmanexe.com.webscraperjob.job.greenwoodnewsjob.GreenwoodNewsItemWriter;
 import protonmanexe.com.webscraperjob.models.GreenwoodNewsArticle;
 
 @Configuration
@@ -22,10 +23,13 @@ public class JobConfig {
     private GreenwoodNewJobExecutionListener gNJobListener;
 
     @Autowired
-    private ItemReader<GreenwoodNewsArticle> gNItemReader;
+    private GreenwoodNewsItemReader gNItemReader;
 
     @Autowired
-    private ItemWriter<GreenwoodNewsArticle> gNItemWriter;
+    private GreenwoodNewsItemProcessor gNItemProcessor;
+
+    @Autowired
+    private GreenwoodNewsItemWriter gNItemWriter;
 
     @Bean
     public Job greenwoodNewsJob(JobRepository jobRepository, 
@@ -41,10 +45,11 @@ public class JobConfig {
     public Step greenwoodNewsStep(JobRepository jobRepository, 
                                   PlatformTransactionManager transactionManager) {
         return new StepBuilder("greenwoodNewsStep", jobRepository)
-                .<GreenwoodNewsArticle, GreenwoodNewsArticle>chunk(10, transactionManager)
-                .reader(gNItemReader)
-                .writer(gNItemWriter)
-                .build();
+            .<GreenwoodNewsArticle, GreenwoodNewsArticle>chunk(10, transactionManager)
+            .reader(gNItemReader)
+            .processor(gNItemProcessor)
+            .writer(gNItemWriter)
+            .build();
     }
    
 }
