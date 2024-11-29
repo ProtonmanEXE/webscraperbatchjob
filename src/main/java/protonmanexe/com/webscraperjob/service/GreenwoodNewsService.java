@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import static protonmanexe.com.webscraperjob.constants.Constants.*;
+import static protonmanexe.com.webscraperjob.constants.Constants.GREENWOOD_NEWS_CSS_QUERY_STRING;
 import protonmanexe.com.webscraperjob.models.GreenwoodNewsArticle;
 
 @Service
@@ -44,7 +44,7 @@ public class GreenwoodNewsService {
                 article.setUrl(element.selectFirst("a").attr("href"));
                 news.add(article);
             }
-        } else log.error("No result from {}", greenwoodNewsUrl);
+        } else log.error("No news articles from {}", greenwoodNewsUrl);
 
 		log.info("Number of objects scraped: {}", news.size());
 

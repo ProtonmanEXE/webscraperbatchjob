@@ -12,10 +12,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import protonmanexe.com.webscraperjob.job.greenwoodnewsjob.GreenwoodNewJobExecutionListener;
 import protonmanexe.com.webscraperjob.models.GreenwoodNewsArticle;
 
 @Configuration
 public class JobConfig {
+
+    @Autowired
+    private GreenwoodNewJobExecutionListener gNJobListener;
 
     @Autowired
     private ItemReader<GreenwoodNewsArticle> gNItemReader;
@@ -29,6 +33,7 @@ public class JobConfig {
                                 PlatformTransactionManager transactionManager) {
         return new JobBuilder("greenwoodNewsJob", jobRepository)
             .start(greenwoodNewsStep)
+            .listener(gNJobListener)
             .build();
     }
     
