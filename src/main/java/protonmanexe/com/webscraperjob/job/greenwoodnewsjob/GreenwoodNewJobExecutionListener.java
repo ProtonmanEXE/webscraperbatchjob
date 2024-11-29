@@ -1,5 +1,6 @@
 package protonmanexe.com.webscraperjob.job.greenwoodnewsjob;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,15 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
         log.info("Starting jobexecutionlistener...");
 
         // 1) Use webscraper to extract all news article
-        List<GreenwoodNewsArticle> listOfNews = greenwoodNewsSvc.scrapeGreenwoodNewsWebsite();
+        List<GreenwoodNewsArticle> listOfNews = new ArrayList<>();
+        List<GreenwoodNewsArticle> newsFromHomePage = greenwoodNewsSvc.scrapeGreenwoodNewsHomePage();
+        List<GreenwoodNewsArticle> newsFromCrimePage = greenwoodNewsSvc.scrapeGreenwoodNewsCrimePage();
+        for (GreenwoodNewsArticle homeArticle : newsFromHomePage) {
+            listOfNews.add(homeArticle);
+        }
+        for (GreenwoodNewsArticle crimeArticle : newsFromCrimePage) {
+            listOfNews.add(crimeArticle);
+        }
 
         // 2) Filter article base on keywords
         List<String> keywords = List.of("job", "kill", "dies", "dead", "shooting");
