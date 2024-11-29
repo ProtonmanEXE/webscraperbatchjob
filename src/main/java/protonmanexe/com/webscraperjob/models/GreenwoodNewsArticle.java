@@ -44,21 +44,6 @@ public class GreenwoodNewsArticle implements Serializable{
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
-        GreenwoodNewsArticle that = (GreenwoodNewsArticle) object;
-        return getItemNumber() == that.getItemNumber() && java.util.Objects.equals(getHeadlines(), 
-            that.getHeadlines()) && java.util.Objects.equals(getDescription(), 
-            that.getDescription()) && java.util.Objects.equals(getUrl(), that.getUrl());
-    }
-
-    @Override
-    public int hashCode() {
-        return java.util.Objects.hash(super.hashCode(), getItemNumber(), getHeadlines(), getDescription(), getUrl());
-    }
-
-    @Override
     public String toString() {
         return "{" +
             " itemNumber='" + getItemNumber() + "'" +
