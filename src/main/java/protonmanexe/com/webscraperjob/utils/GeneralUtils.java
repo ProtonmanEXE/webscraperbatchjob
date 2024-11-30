@@ -22,7 +22,7 @@ public class GeneralUtils {
                     if (article.getHeadlines().equalsIgnoreCase(addedArticle.getHeadlines())) {
                         duplicateFlag = true;
                         break;
-                    }
+                    } else duplicateFlag = false;
                 }
 
                 if (!duplicateFlag) newList.add(article);

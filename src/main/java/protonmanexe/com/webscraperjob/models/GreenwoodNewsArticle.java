@@ -4,9 +4,11 @@ import java.io.Serializable;
 
 public class GreenwoodNewsArticle implements Serializable{
 
+    private static final long serialVersionUID = 664672716035062719L;
+
     private int itemNumber;
     private String headlines;
-    private String description;
+    private String date;
     private String url;
 
     public GreenwoodNewsArticle() {}
@@ -29,11 +31,12 @@ public class GreenwoodNewsArticle implements Serializable{
       this.headlines = value;
     }
 
-    public String getDescription() {
-      return this.description;
+    public String getDate() {
+      return this.date;
     }
-    public void setDescription(String value) {
-      this.description = value;
+
+    public void setDate(String date) {
+      this.date = date;
     }
 
     public String getUrl() {
@@ -45,12 +48,12 @@ public class GreenwoodNewsArticle implements Serializable{
 
     @Override
     public String toString() {
-        return "{" +
-            " itemNumber='" + getItemNumber() + "'" +
-            ", headlines='" + getHeadlines() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", url='" + getUrl() + "'" +
-            "}";
+      return "{" +
+        " itemNumber='" + getItemNumber() + "'" +
+        ", headlines='" + getHeadlines() + "'" +
+        ", date='" + getDate() + "'" +
+        ", url='" + getUrl() + "'" +
+        "}";
     }
 
 }

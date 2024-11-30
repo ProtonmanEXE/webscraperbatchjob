@@ -80,4 +80,10 @@ public class GreenwoodNewsService {
         return news;
     }
 
+    public String scrapeGreenwoodNewsForDate(String url) {
+        Elements newsElements = webscraper.scrapeNewsSite(url, 
+            GREENWOOD_NEWS_CSS_QUERY_STRING);
+        return newsElements.get(0).selectFirst("time").text();
+    }
+
 }

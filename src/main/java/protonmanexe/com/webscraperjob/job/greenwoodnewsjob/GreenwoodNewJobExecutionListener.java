@@ -57,7 +57,8 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
                 return filterFlag;
             })
                 .collect(Collectors.toList());
-        
+        log.info("{} filtered articles were found", filteredArticleList.size());
+
         // 3) Check whether is there any relevant news and only proceed to remove duplicated if true
         if (filteredArticleList != null && !filteredArticleList.isEmpty()) {
             List<GreenwoodNewsArticle> finalArticleList = 
