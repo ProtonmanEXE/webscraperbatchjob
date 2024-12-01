@@ -6,14 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 
+import static protonmanexe.com.webscraperjob.constants.Constants.*;
 import protonmanexe.com.webscraperjob.models.GreenwoodNewsArticle;
+import protonmanexe.com.webscraperjob.service.TelegramMessagerService;
+import protonmanexe.com.webscraperjob.utils.GeneralUtils;
 
 @Component
 public class GreenwoodNewsItemWriter implements ItemWriter<GreenwoodNewsArticle> {
@@ -25,6 +27,12 @@ public class GreenwoodNewsItemWriter implements ItemWriter<GreenwoodNewsArticle>
 
     @Value("${telegram.greenwood.news.chat.id}")
     private String chatId;
+
+    @Autowired
+    private TelegramMessagerService TeleMsgSvc;
+
+    @Autowired
+    private GeneralUtils generalUtils;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -45,22 +53,23 @@ public class GreenwoodNewsItemWriter implements ItemWriter<GreenwoodNewsArticle>
             log.error("Error sending message, error {}", e.toString());
         }
 
+        String bulletinMsg = generalUtils.generateTimeInHourPmAm().toLowerCase()
+            .concat(GREENWOOD_NEW_BULLETIN);
+        TeleMsgSvc.sendTelegramMessage(bot, bulletinMsg, fullChatId);
+
         // 2) Create Telegram bot object and chat id
         for (GreenwoodNewsArticle article : listOfNews) {
             log.info("Article: {}", article.toString());
 
-            String message = ("Headline: ").concat(article.getHeadlines()).concat(System.lineSeparator())
-                .concat("Link: ").concat(article.getUrl());
-
-            SendMessage request = new SendMessage(fullChatId, message);
-            SendResponse response = bot.execute(request);
-
-            // Check if the message was sent successfully
-            if (response.isOk()) {
-                System.out.println("Message sent successfully!");
-            } else {
-                System.out.println("Error sending message: " + response.description());
-            }
+            String msg = ("Headline: ")
+                .concat(article.getHeadlines())
+                .concat(System.lineSeparator())
+                .concat("Date: ")
+                .concat(article.getDate())
+                .concat(System.lineSeparator())
+                .concat("Link: ")
+                .concat(article.getUrl());
+            TeleMsgSvc.sendTelegramMessage(bot, msg, fullChatId);
         }
     
     }
