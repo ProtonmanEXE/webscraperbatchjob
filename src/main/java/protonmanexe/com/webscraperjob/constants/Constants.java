@@ -7,5 +7,5 @@ public class Constants {
 
     // Css query constants
     public static final String GREENWOOD_NEWS_CSS_QUERY_STRING = "h3.tnt-headline";
-    public static final String GREENWOOD_DATE_CSS_QUERY_STRING = "li.hidden-print";
+    public static final String GREENWOOD_DATE_CSS_QUERY_STRING = "li.visible-print";
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import static protonmanexe.com.webscraperjob.constants.Constants.GREENWOOD_DATE_CSS_QUERY_STRING;
 import static protonmanexe.com.webscraperjob.constants.Constants.GREENWOOD_NEWS_CSS_QUERY_STRING;
 import protonmanexe.com.webscraperjob.models.GreenwoodNewsArticle;
 
@@ -45,6 +46,7 @@ public class GreenwoodNewsService {
                 GreenwoodNewsArticle article = new GreenwoodNewsArticle();
                 article.setHeadlines(element.selectFirst("a").text());
                 article.setUrl(element.selectFirst("a").attr("href"));
+                article.setSourceUrl(greenwoodNewsHomePageUrl);
                 news.add(article);
             }
         } else log.error("No news articles from {}", greenwoodNewsHomePageUrl);
@@ -71,6 +73,7 @@ public class GreenwoodNewsService {
                 GreenwoodNewsArticle article = new GreenwoodNewsArticle();
                 article.setHeadlines(element.selectFirst("a").text());
                 article.setUrl(element.selectFirst("a").attr("href"));
+                article.setSourceUrl(greenwoodNewsCrimePageUrl);
                 news.add(article);
             }
         } else log.error("No news articles from {}", greenwoodNewsCrimePageUrl);
@@ -81,9 +84,15 @@ public class GreenwoodNewsService {
     }
 
     public String scrapeGreenwoodNewsForDate(String url) {
+        String date = null;
         Elements newsElements = webscraper.scrapeNewsSite(url, 
-            GREENWOOD_NEWS_CSS_QUERY_STRING);
-        return newsElements.get(0).selectFirst("time").text();
+            GREENWOOD_DATE_CSS_QUERY_STRING);
+        if (newsElements != null) {
+            for (Element element : newsElements) {
+                date = element.selectFirst("time").text();
+            }
+        }
+        return date;
     }
 
 }

@@ -27,8 +27,8 @@ public class GreenwoodNewsItemProcessor implements ItemProcessor<GreenwoodNewsAr
         log.info("Starting itemprocessor...");
 
         article.setUrl(greenwoodNewsHomePageUrl.concat(article.getUrl()));
-        // article.setDate((greenwoodNewsSvc.scrapeGreenwoodNewsForDate(greenwoodNewsHomePageUrl)));
-        // log.info("Date: {}", article.getDate());
+        article.setDate(
+            greenwoodNewsSvc.scrapeGreenwoodNewsForDate(article.getUrl()));
         return article;
     }
 

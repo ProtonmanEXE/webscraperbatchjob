@@ -10,6 +10,7 @@ public class GreenwoodNewsArticle implements Serializable{
     private String headlines;
     private String date;
     private String url;
+    private String sourceUrl;
 
     public GreenwoodNewsArticle() {}
     
@@ -46,6 +47,14 @@ public class GreenwoodNewsArticle implements Serializable{
       this.url = value;
     }
 
+    public String getSourceUrl() {
+      return this.sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+      this.sourceUrl = sourceUrl;
+    }
+
     @Override
     public String toString() {
       return "{" +
@@ -53,7 +62,8 @@ public class GreenwoodNewsArticle implements Serializable{
         ", headlines='" + getHeadlines() + "'" +
         ", date='" + getDate() + "'" +
         ", url='" + getUrl() + "'" +
+        ", sourceUrl='" + getSourceUrl() + "'" +
         "}";
-    }
+  }
 
 }

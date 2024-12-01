@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,11 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
     public void beforeJob(JobExecution jobExecutionListener) {
         log.info("Starting jobexecutionlistener...");
 
-        // 1) Use webscraper to extract all news article
+        // 1) Initialise variables
         List<GreenwoodNewsArticle> listOfNews = new ArrayList<>();
+        List<GreenwoodNewsArticle> finalArticleList = new ArrayList<>();
+
+        // 2) Use webscraper to extract all news article
         List<GreenwoodNewsArticle> newsFromHomePage = greenwoodNewsSvc.scrapeGreenwoodNewsHomePage();
         List<GreenwoodNewsArticle> newsFromCrimePage = greenwoodNewsSvc.scrapeGreenwoodNewsCrimePage();
         for (GreenwoodNewsArticle homeArticle : newsFromHomePage) {
@@ -48,7 +50,6 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
         }
 
         // 2) Filter article base on keywords
-        filterKeywords.forEach(word -> log.info(word));
         List<GreenwoodNewsArticle> filteredArticleList = 
             listOfNews.stream().filter(greenwoodNewsArticle -> {
                 boolean filterFlag = filterKeywords.stream().anyMatch(
@@ -57,18 +58,15 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
                 return filterFlag;
             })
                 .collect(Collectors.toList());
-        log.info("{} filtered articles were found", filteredArticleList.size());
 
         // 3) Check whether is there any relevant news and only proceed to remove duplicated if true
         if (filteredArticleList != null && !filteredArticleList.isEmpty()) {
-            List<GreenwoodNewsArticle> finalArticleList = 
-                generalUtils.checkForDuplicateNews(filteredArticleList);
+            log.info("{} filtered articles were found", filteredArticleList.size());
+            finalArticleList = generalUtils.checkForDuplicateNews(filteredArticleList);
             log.info("{} relevant articles were found", finalArticleList.size());
-            jobExecutionListener.getExecutionContext().put(GREENWOOD_NEWS_ARTICLE_LIST, finalArticleList);
-        } else {
-            log.info("No relevant articles were found");
-            jobExecutionListener.setStatus(BatchStatus.COMPLETED);
-        }
+        } else log.info("No relevant articles were found");
+
+        jobExecutionListener.getExecutionContext().put(GREENWOOD_NEWS_ARTICLE_LIST, finalArticleList);
     }
 
     @Override
