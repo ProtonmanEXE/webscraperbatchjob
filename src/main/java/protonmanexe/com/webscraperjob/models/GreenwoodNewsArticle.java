@@ -1,11 +1,16 @@
 package protonmanexe.com.webscraperjob.models;
 
-public class GreenwoodNewsArticle {
+import java.io.Serializable;
+
+public class GreenwoodNewsArticle implements Serializable{
+
+    private static final long serialVersionUID = 664672716035062719L;
 
     private int itemNumber;
     private String headlines;
-    private String description;
+    private String date;
     private String url;
+    private String sourceUrl;
 
     public GreenwoodNewsArticle() {}
     
@@ -27,11 +32,12 @@ public class GreenwoodNewsArticle {
       this.headlines = value;
     }
 
-    public String getDescription() {
-      return this.description;
+    public String getDate() {
+      return this.date;
     }
-    public void setDescription(String value) {
-      this.description = value;
+
+    public void setDate(String date) {
+      this.date = date;
     }
 
     public String getUrl() {
@@ -41,14 +47,23 @@ public class GreenwoodNewsArticle {
       this.url = value;
     }
 
+    public String getSourceUrl() {
+      return this.sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+      this.sourceUrl = sourceUrl;
+    }
+
     @Override
     public String toString() {
-        return "{" +
-            " itemNumber='" + getItemNumber() + "'" +
-            ", headlines='" + getHeadlines() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", url='" + getUrl() + "'" +
-            "}";
-    }
+      return "{" +
+        " itemNumber='" + getItemNumber() + "'" +
+        ", headlines='" + getHeadlines() + "'" +
+        ", date='" + getDate() + "'" +
+        ", url='" + getUrl() + "'" +
+        ", sourceUrl='" + getSourceUrl() + "'" +
+        "}";
+  }
 
 }
