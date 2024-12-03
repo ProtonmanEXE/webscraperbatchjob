@@ -21,7 +21,7 @@ public class GreenwoodNewsScheduler {
     @Autowired
     private Job greenwoodNewsJob;
 
-    @Scheduled(cron = "0 0 8,13 * * ?") // Run every at 8am and 1pm
+    @Scheduled(cron = "${greenwood.news.cron.expression}") // Run every at 8am and 1pm
     public void runBatchJob() {
         log.error("Starting scheduler...");
         JobParameters jobParameters = new JobParametersBuilder()

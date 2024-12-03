@@ -1,6 +1,7 @@
 HELP.md
 webscraperjob.log
 application-dev.properties
+application-prd.properties
 notes/
 target/
 !.mvn/wrapper/maven-wrapper.jar
