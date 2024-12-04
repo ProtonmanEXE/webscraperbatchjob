@@ -2,6 +2,9 @@ package protonmanexe.com.webscraperjob.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,4 +53,11 @@ public class GeneralUtils {
         return dateString.substring(index, dateString.length()).toLowerCase();
     }
 
+    public boolean compareTimeDifferenceInDays(String date, String datetimeformat, int threshold) {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern(datetimeformat);
+		LocalDate date1 = LocalDate.parse(date, dtf);
+		LocalDate date2 = LocalDate.now();
+		Period diff = Period.between(date1, date2);
+        return diff.getDays() < threshold; // true indicates non-outdated article
+    }
 }
