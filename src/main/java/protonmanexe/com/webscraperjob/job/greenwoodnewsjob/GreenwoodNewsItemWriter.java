@@ -1,5 +1,6 @@
 package protonmanexe.com.webscraperjob.job.greenwoodnewsjob;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -28,6 +29,9 @@ public class GreenwoodNewsItemWriter implements ItemWriter<GreenwoodNewsArticle>
     @Value("${telegram.greenwood.news.chat.id}")
     private String chatId;
 
+    @Value("${greenwood.news.date.threshold}")
+    private int dateThreshold;
+
     @Autowired
     private TelegramMessagerService TeleMsgSvc;
 
@@ -44,34 +48,52 @@ public class GreenwoodNewsItemWriter implements ItemWriter<GreenwoodNewsArticle>
         TelegramBot bot = null;
         Long fullChatId = null;
         List<GreenwoodNewsArticle> listOfNews = (List<GreenwoodNewsArticle>) items.getItems();
+        List<GreenwoodNewsArticle> nonOutdatedNews = new ArrayList<>();
 
         try {
-        // 2) Create Telegram bot object and chat id
+        // 2) Create Telegram bot and chat id
             bot = new TelegramBot(botToken);
             fullChatId = -Long.valueOf(chatId);
         } catch (NumberFormatException e) {
             log.error("Error sending message, error {}", e.toString());
         }
 
-        String bulletinMsg = generalUtils.generateTimeInHourPmAm().toLowerCase()
-            .concat(GREENWOOD_NEW_BULLETIN);
-        TeleMsgSvc.sendTelegramMessage(bot, bulletinMsg, fullChatId);
-
-        // 2) Create Telegram bot object and chat id
+        // 3) Check articles to determine whether they are outdated
         for (GreenwoodNewsArticle article : listOfNews) {
-            log.info("Article: {}", article.toString());
-
-            String msg = ("Headline: ")
-                .concat(article.getHeadlines())
-                .concat(System.lineSeparator())
-                .concat("Date: ")
-                .concat(article.getDate())
-                .concat(System.lineSeparator())
-                .concat("Link: ")
-                .concat(article.getUrl());
-            TeleMsgSvc.sendTelegramMessage(bot, msg, fullChatId);
+            if (generalUtils.compareTimeDifferenceInDays(article.getDate(), "MMM d, yyyy", dateThreshold)) {
+                nonOutdatedNews.add(article);
+            } else log.info("Article {} was removed", article.getHeadlines());
         }
-    
+
+        // 4) Send no greenwood news msg if updated news list has no more news
+        if (nonOutdatedNews.isEmpty()) {
+            String msg = generalUtils.generateTimeInHourPmAm()
+            .concat(GREENWOOD_NEW_BULLETIN)
+            .concat(" - ")
+            .concat(NO_GREENWOOD_NEWS);
+            log.info("Msg: {}", msg);
+            TeleMsgSvc.sendTelegramMessage(bot, msg, fullChatId);
+        } else {
+        // 5) Send greenwood news msg template if updated news list still has news
+            String bulletinMsg = generalUtils.generateTimeInHourPmAm().toLowerCase()
+                .concat(GREENWOOD_NEW_BULLETIN);
+            TeleMsgSvc.sendTelegramMessage(bot, bulletinMsg, fullChatId);
+
+            for (GreenwoodNewsArticle article : nonOutdatedNews) {
+                log.info("Article: {}", article.toString());
+
+                String msg = ("Headline: ")
+                    .concat(article.getHeadlines())
+                    .concat(System.lineSeparator())
+                    .concat("Date: ")
+                    .concat(article.getDate())
+                    .concat(System.lineSeparator())
+                    .concat("Link: ")
+                    .concat(article.getUrl());
+                TeleMsgSvc.sendTelegramMessage(bot, msg, fullChatId);
+            }
+        }
+
     }
 
 }
