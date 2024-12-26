@@ -1,9 +1,8 @@
 # WebscraperBatchJob
 This repository is created to scrap news from a website on a regular basis using Java Springboot
 
-## General Outline
-1. Spring Scheduler - schedule the job to run at regular intervals
-2. Spring Batch - set-up a batch job
-3. (Webscraping) - read certain data from the website in the Itemreader class
-2. (Send Telegram Message) - send message to Telegram in the Itemwriter class
-3. (Shell Script)
+## Dependencies Used
+1. Spring Scheduler - schedule the job to run using cron expression
+2. Spring Batch - set-up batch job
+3. Jsoup - simplify working with real-world HTML and XML for web scraping
+4. java-telegram-bot-api - interact with the Telegram Bot api
