@@ -58,6 +58,6 @@ public class GeneralUtils {
 		LocalDate date1 = LocalDate.parse(date, dtf);
 		LocalDate date2 = LocalDate.now();
 		Period diff = Period.between(date1, date2);
-        return diff.getDays() < threshold; // true indicates non-outdated article
+        return diff.getMonths() == 0 && diff.getDays() < threshold; // true indicates non-outdated article
     }
 }
