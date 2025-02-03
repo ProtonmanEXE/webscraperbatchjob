@@ -62,7 +62,7 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
         List<GreenwoodNewsArticle> filteredArticleList = 
             listOfNews.stream().filter(greenwoodNewsArticle -> {
                 return filterKeywords.stream().anyMatch(
-                    greenwoodNewsArticle.getHeadlines().toLowerCase()::contains);
+                    greenwoodNewsArticle.getHeadlines()::contains);
                 })
                 .collect(Collectors.toList());
 
@@ -71,7 +71,7 @@ public class GreenwoodNewJobExecutionListener implements JobExecutionListener {
             log.info("{} filtered articles were found", filteredArticleList.size());
             List<GreenwoodNewsArticle> finalArticleList = 
                 generalUtils.checkForDuplicateNews(filteredArticleList);
-            log.info("{} relevant articles were found", finalArticleList.size());
+            log.info("{} unique articles were found", finalArticleList.size());
             jobExecutionListener.getExecutionContext().put(
                 GREENWOOD_NEWS_ARTICLE_LIST, finalArticleList);
         } else {
